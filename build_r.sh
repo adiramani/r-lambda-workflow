@@ -7,13 +7,7 @@
 
 set -euo pipefail
 
-VERSION=$1
-
-if [ -z "$VERSION" ];
-then
-    echo 'version number required'
-    exit 1
-fi
+VERSION=4.3.2
 
 
 sudo mkdir build/
@@ -34,8 +28,6 @@ sudo yum install -y readline-devel \
     gcc-c++ gcc-gfortran \
     zlib-devel bzip2 bzip2-libs
 
-sudo yum downgrade curl-7.88.1 libcurl-7.88.1
-
 cd /opt/R/
 mkdir /opt/R/bin
 cp /usr/bin/which /opt/R/bin/
@@ -54,7 +46,8 @@ sudo cp /usr/lib64/libpcre2-8.so.0 lib/
 
 sudo yum install -y openssl-devel libxml2-devel
 
-sudo ./bin/Rscript -e 'chooseCRANmirror(graphics=FALSE, ind=34); install.packages(c("httr", "aws.s3", "logging", "Rcpp", "dplyr", "jsonlite"))'
+# Make sure to have at least 2GB memory
+sudo ./bin/Rscript -e 'chooseCRANmirror(graphics=FALSE, ind=34); install.packages(c("httr", "aws.s3", "logging", "Rcpp", "RcppNumerical", "RcppEigen", "tidyverse", "dplyr", "jsonlite"))'
 
 sudo zip -r -q ~/build/R.zip bin/ lib/ etc/ library/ doc/ modules/ share/
 
